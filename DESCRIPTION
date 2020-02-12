@@ -1,0 +1,12 @@
+Package: testsheets
+Type: Package
+Title: Turning Sheets into TestThat Functions
+Version: 0.1.0
+Author: Nicole Brewer
+Maintainer: Nicole Brewer <brewer36@purdue.edu>
+Description: This package creates thatthat functions from Google and Excel spreadsheets. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: testthat, googlesheets4, googledrive, readxl, glue
+Remotes: nicole-brewer/googlesheets4

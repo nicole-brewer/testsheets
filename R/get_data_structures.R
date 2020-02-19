@@ -7,7 +7,7 @@
 #' @export
 get_spreadsheet_from_drive <- function(file_dribble) {
 
-  ## *taken from googlesheets*
+  ## *taken from googlesheets4*
   if (nrow(file_dribble) != 1) {
     stop_glue(
       "Dribble input must have exactly 1 row.\n",

@@ -32,7 +32,7 @@ validate_sheet <- function(spreadsheet, sheet_name) {
   #names <- googlesheets4::sheets_sheet_names(spreadsheet)
   #if (!is.element(sheet_name, names)) {
   #  stop_glue("No sheet named {sheet_name} exists in this spreadsheet.")
-  #}
+  # }
 }
 
 validate_testsheet <- function(sheet) {

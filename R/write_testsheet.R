@@ -1,4 +1,4 @@
-write_testsheet <- function(sheet, filename=NULL, filepath=NULL, overwrite=FALSE) {
+write_testsheet <- function(spreadsheet, sheet_name, filename=NULL, filepath=NULL, overwrite=FALSE) {
   validate_spreadsheet(spreadsheet)
   validate_sheet(sheet_name)
   connection <- open_file_connection(sheet_name, filename, filepath, overwrite)

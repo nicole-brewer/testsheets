@@ -8,8 +8,8 @@ Description: This package creates thatthat functions from Google and Excel sprea
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: testthat, googlesheets4, googledrive, readxl, glue, usethis, dplyr, magrittr
-Suggests: 
+Imports: testthat, googlesheets4, googledrive, readxl, glue, usethis, tidyverse, magrittr
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr

@@ -1,13 +1,12 @@
-read_testsheet <- function(sheet, sheet_name) {
+read_testsheet <- function(spreadsheet, sheet_name) {
   validate_spreadsheet(spreadsheet)
+  sheet <- read_testsheet_i(spreadsheet, sheet_name)
   validate_sheet(sheet, sheet_name)
-  read_testsheet_i(sheet, sheet_name)
 }
 
-read_testhsheet_i <- function(sheet, sheet_name) {
-  # discard user columns
-  sheet <- dplyr::select(sheet, -starts_with("user_"))
-  # discard rows where "include" is FALSE, and then discard include column
-  sheet <- dplyr::filter(sheet, include == TRUE)
-  sheet <- dplyr::select(sheet, -include)
+read_testsheet_i <- function(spreadsheet, sheet_name) {
+  sheet <- googlesheets4::read_sheet(spreadsheet, sheet=sheet_name) %>%
+    dplyr::select(-starts_with("user_")) %>%  # discard user column
+    dplyr::mutate_if(is.character, ~ paste0("\"", . , "\""))
+    dplyr::filter(include == TRUE)  # discard rows where "include" is FALSE, and then discard include column
 }

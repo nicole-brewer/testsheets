@@ -13,7 +13,7 @@ validate_spreadsheet <- function(spreadsheet) {
   if (nrow(spreadsheet) != 1) {
     stop_glue(
       "Dribble input must have exactly 1 file.\n",
-      "  * Actual input has {nrow(x)} files."
+      "  * Actual input has {nrow(spreadsheet)} files."
     )
   }
 

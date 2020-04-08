@@ -10,7 +10,7 @@ open_file_connection <- function(sheet_name, filename=NULL, filepath=NULL, overw
 
   # default filename is the name of the sheet
   if (is.null(filename)) {
-    filename <- paste0(sheet_name, ".R")
+    filename <- paste0("testsheet_", sheet_name, ".R")
   }
 
   # default path is cwd

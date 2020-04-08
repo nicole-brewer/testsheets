@@ -5,8 +5,9 @@ read_testsheet <- function(spreadsheet, sheet_name) {
 }
 
 read_testsheet_i <- function(spreadsheet, sheet_name) {
-  sheet <- googlesheets4::read_sheet(spreadsheet, sheet=sheet_name) %>%
+  sheet <- googlesheets4::read_sheet(spreadsheet, sheet=sheet_name)
+  sheet <- sheet %>%
+    dplyr::filter(include == TRUE) %>%  # discard rows where "include" is FALSE, and then discard include column
     dplyr::select(-starts_with("user_")) %>%  # discard user column
     dplyr::mutate_if(is.character, ~ paste0("\"", . , "\""))
-    dplyr::filter(include == TRUE)  # discard rows where "include" is FALSE, and then discard include column
 }

@@ -17,7 +17,7 @@ use_testsheets <- function() {
                      to set up testing infrastructure")
   }
 
-  if (usethis::is_package()) {
+  if (is_package()) {
     use_dependency("testthat", "Suggests")
     use_dependency("testsheets", "Suggests")
     use_dependency("googledrive", "Suggests")

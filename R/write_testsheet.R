@@ -45,9 +45,9 @@ write_row <- function(row, sheet_name, connection) {
   clean_row <- row %>% dplyr::select_if(~any(!is.na(.)))
 
   # preprocess: separate parameters from expected output
-  params <- dplyr::select(clean_row, starts_with("param_"))
-  params <- (dplyr::rename_at(params, dplyr::vars(starts_with("param_")), ~ stringr::str_replace(., "param_", "")))
-  expects <- dplyr::select(clean_row, starts_with("expect_"))
+  params <- dplyr::select(clean_row, dplyr::starts_with("param_"))
+  params <- (dplyr::rename_at(params, dplyr::vars(dplyr::starts_with("param_")), ~ stringr::str_replace(., "param_", "")))
+  expects <- dplyr::select(clean_row, dplyr::starts_with("expect_"))
 
   # test_that ...
   writeLines(paste0("test_that( ", row$test_that, ", {"), connection)

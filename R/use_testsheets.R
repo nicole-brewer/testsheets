@@ -4,9 +4,6 @@
 #'
 #' Sets up data structures required to save a running list of testsheet source files.
 #' @export
-#'
-#' @examples
-#' use_testsheets()
 use_testsheets <- function() {
   check_installed("testthat")
   check_installed("testsheets")
@@ -31,11 +28,11 @@ use_testsheets <- function() {
   spreadsheets_file <- fs::path("tests", ".spreadsheets.rds")
   sheets_file <- fs::path("tests", ".sheets.rds")
   # create an empty dribble
-  spreadsheets <- googledrive::as_dribble()
+  ss <- googledrive::as_dribble()
   # empty list for sheet names
-  sheets <- list()
-  saveRDS(spreadsheets, file = spreadsheets_file, compress = FALSE)
-  saveRDS(sheets, file = sheets_file, compress = FALSE)
+  s <- sheets()
+  saveRDS(ss, file = spreadsheets_file, compress = FALSE)
+  saveRDS(s, file = sheets_file, compress = FALSE)
 
   usethis::ui_todo(
     "Call {ui_code('googledrive::drive_auth()')} to authorize googledrive to view and manage \\
@@ -44,7 +41,7 @@ use_testsheets <- function() {
   )
   usethis::ui_todo(
     "Call {ui_code('googlesheets4::sheets_auth(token = drive_token())')} to direct googlesheets4 \\
-    to use the same token as googledrive"
+    to use the same token as googledrive."
   )
 }
 
@@ -52,7 +49,7 @@ use_testsheets <- function() {
 #' @keywords internal
 check_installed <- function(pkg) {
   if (!is_installed(pkg)) {
-    ui_stop("Package {ui_value(pkg)} required. Please install before re-trying.")
+    usethis::ui_stop("Package {ui_value(pkg)} required. Please install before re-trying.")
   }
 }
 
@@ -63,6 +60,25 @@ is_installed <- function(pkg) {
 }
 
 
+#' @seealso Taken directly from usethis package at \url{https://github.com/r-lib/usethis/blob/f0fc0e599cb57411d6bc07d04ae4d4df28975e79/R/proj.R}.
+#' @keywords internal
+
+is_package <- function(base_path = usethis::proj_get()) {
+  res <- tryCatch(
+    rprojroot::find_package_root_file(path = base_path),
+    error = function(e) NULL
+  )
+  !is.null(res)
+}
+
+#' @seealso Taken directly from usethis package at \url{https://github.com/r-lib/usethis/blob/fb6e390bf874462ffab803df2319f8a982a0848f/R/helpers.R}.
+#' @keywords internal
+version_spec <- function(x) {
+  x <- gsub("(<=|<|>=|>|==)\\s*", "", x)
+  numeric_version(x)
+}
+
+
 #' @seealso Taken directly from usethis package at \url{https://github.com/r-lib/usethis/blob/fb6e390bf874462ffab803df2319f8a982a0848f/R/helpers.R}.
 #' @keywords internal
 use_dependency <- function(package, type, min_version = NULL) {
@@ -70,8 +86,8 @@ use_dependency <- function(package, type, min_version = NULL) {
   stopifnot(rlang::is_string(type))
 
   if (package != "R" && !is_installed(package)) {
-    ui_stop(c(
-      "{ui_value(package)} must be installed before you can ",
+    usethis::ui_stop(c(
+      "{usethis::ui_value(package)} must be installed before you can ",
       "take a dependency on it."
     ))
   }
@@ -85,7 +101,7 @@ use_dependency <- function(package, type, min_version = NULL) {
   names(types) <- tolower(types)
   type <- types[[match.arg(tolower(type), names(types))]]
 
-  deps <- desc::desc_get_deps(proj_get())
+  deps <- desc::desc_get_deps(usethis::proj_get())
 
   existing_dep <- deps$package == package
   existing_type <- deps$type[existing_dep]
@@ -95,8 +111,8 @@ use_dependency <- function(package, type, min_version = NULL) {
 
   # No existing dependency, so can simply add
   if (!any(existing_dep) || any(is_linking_to)) {
-    ui_done("Adding {ui_value(package)} to {ui_field(type)} field in DESCRIPTION")
-    desc::desc_set_dep(package, type, version = version, file = proj_get())
+    usethis::ui_done("Adding {usethis::ui_value(package)} to {usethis::ui_field(type)} field in DESCRIPTION")
+    desc::desc_set_dep(package, type, version = version, file = usethis::proj_get())
     return(invisible())
   }
 
@@ -104,30 +120,30 @@ use_dependency <- function(package, type, min_version = NULL) {
   delta <- sign(match(existing_type, types) - match(type, types))
   if (delta < 0) {
     # don't downgrade
-    ui_warn(
-      "Package {ui_value(package)} is already listed in \\
-      {ui_value(existing_type)} in DESCRIPTION, no change made."
+    usethis::ui_warn(
+      "Package {usethis::ui_value(package)} is already listed in \\
+      {usethis::ui_value(existing_type)} in DESCRIPTION, no change made."
     )
   } else if (delta == 0 && !is.null(min_version)) {
     # change version
     upgrade <- existing_ver == "*" || numeric_version(min_version) > version_spec(existing_ver)
     if (upgrade) {
-      ui_done(
-        "Increasing {ui_value(package)} version to {ui_value(version)} in DESCRIPTION"
+      usethis::ui_done(
+        "Increasing {usethis::ui_value(package)} version to {usethis::ui_value(version)} in DESCRIPTION"
       )
-      desc::desc_set_dep(package, type, version = version, file = proj_get())
+      desc::desc_set_dep(package, type, version = version, file = usethis::proj_get())
     }
   } else if (delta > 0) {
     # upgrade
     if (existing_type != "LinkingTo") {
-      ui_done(
+      usethis::ui_done(
         "
-        Moving {ui_value(package)} from {ui_field(existing_type)} to {ui_field(type)} \\
+        Moving {usethis::ui_value(package)} from {usethis::ui_field(existing_type)} to {usethis::ui_field(type)} \\
         field in DESCRIPTION
         "
       )
-      desc::desc_del_dep(package, existing_type, file = proj_get())
-      desc::desc_set_dep(package, type, version = version, file = proj_get())
+      desc::desc_del_dep(package, existing_type, file = usethis::proj_get())
+      desc::desc_set_dep(package, type, version = version, file = usethis::proj_get())
     }
   }
 

@@ -1,3 +1,10 @@
 ^testsheets\.Rproj$
 ^\.Rproj\.user$
 superpower_example.R
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+
+# dotfiles created by use_testsheets
+tests/.spreadsheets.rds
+tests/.sheets.rds

@@ -14,7 +14,13 @@ mime_type <- googledrive::drive_mime_type("spreadsheet")
 # get and verify spreadsheet
 spreadsheet <- googledrive::drive_find(file_name, type=mime_type)
 sheet_name <- "powerTtest"
-write_testsheet(spreadsheet, sheet_name)
+
+s <-  sheets()
+print(s)
+save_sheets(s)
+add(sheet_name, spreadsheet)
+
+#write_testsheet(spreadsheet, sheet_name)
 
 
 

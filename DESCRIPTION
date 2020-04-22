@@ -20,6 +20,7 @@ Imports:
     rprojroot
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testsheets
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2

@@ -62,7 +62,6 @@ is_installed <- function(pkg) {
 
 #' @seealso Taken directly from usethis package at \url{https://github.com/r-lib/usethis/blob/f0fc0e599cb57411d6bc07d04ae4d4df28975e79/R/proj.R}.
 #' @keywords internal
-
 is_package <- function(base_path = usethis::proj_get()) {
   res <- tryCatch(
     rprojroot::find_package_root_file(path = base_path),

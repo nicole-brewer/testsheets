@@ -19,7 +19,7 @@ read_testsheet_i <- function(spreadsheet, sheet_name) {
   sheet <- sheet %>%
     dplyr::select(-dplyr::starts_with("user_")) %>%  # discard user column
     dplyr::mutate_if(is.character, ~ paste0("\"", . , "\""))
-  sheet <- sheet %>% dplyr::filter(dplyr::include == TRUE)  # discard rows where "include" is FALSE, and then discard include column
+  sheet <- sheet %>% dplyr::filter(include == TRUE)  # discard rows where "include" is FALSE, and then discard include column
   # don't know what this is for
   sheet <- data.frame(lapply(sheet[, names(which(sapply(colnames(sheet), function(x) sum(grepl('c[(]', sheet[, x])) > 0)))], function(y) gsub("NA", "NULL", y)))
   sheet <- data.frame(lapply(sheet[, names(which(sapply(colnames(sheet), function(x) sum(grepl('c[(]', sheet[, x])) > 0)))], function(y) gsub('"', '', y)))

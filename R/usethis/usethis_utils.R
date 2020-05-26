@@ -4,7 +4,7 @@ can_overwrite <- function(path) {
   }
 
   if (is_interactive()) {
-    ui_yeah("Overwrite pre-existing file {ui_path(path)}?")
+    usethis::ui_yeah("Overwrite pre-existing file {ui_path(path)}?")
   } else {
     FALSE
   }
@@ -13,10 +13,10 @@ can_overwrite <- function(path) {
 check_is_named_list <- function(x, nm = deparse(substitute(x))) {
   if (!is_list(x)) {
     bad_class <- paste(class(x), collapse = "/")
-    ui_stop("{ui_code(nm)} must be a list, not {ui_value(bad_class)}.")
+    usethis::ui_stop("{ui_code(nm)} must be a list, not {ui_value(bad_class)}.")
   }
   if (!is_dictionaryish(x)) {
-    ui_stop(
+    usethis::ui_stop(
       "Names of {ui_code(nm)} must be non-missing, non-empty, and non-duplicated."
     )
   }
@@ -46,7 +46,7 @@ compact <- function(x) {
 
 check_installed <- function(pkg) {
   if (!is_installed(pkg)) {
-    ui_stop("Package {ui_value(pkg)} required. Please install before re-trying.")
+    usethis::ui_stop("Package {ui_value(pkg)} required. Please install before re-trying.")
   }
 }
 

@@ -10,13 +10,13 @@ use_description_field <- function(name,
   }
 
   if (!is.na(curr) && !overwrite) {
-    ui_stop(
+    usethiss::ui_stop(
       "{ui_field(name)} has a different value in DESCRIPTION.\\
       Use {ui_code('overwrite = TRUE')} to overwrite."
     )
   }
 
-  ui_done("Setting {ui_field(name)} field in DESCRIPTION to {ui_value(value)}")
+  usethiss::ui_done("Setting {ui_field(name)} field in DESCRIPTION to {ui_value(value)}")
   desc::desc_set(name, value, file = base_path)
   invisible()
 }
@@ -26,7 +26,7 @@ use_dependency <- function(package, type, min_version = NULL) {
   stopifnot(is_string(type))
 
   if (package != "R" && !is_installed(package)) {
-    ui_stop(c(
+    usethiss::ui_stop(c(
       "{ui_value(package)} must be installed before you can ",
       "take a dependency on it."
     ))

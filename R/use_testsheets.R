@@ -5,6 +5,10 @@
 #' Sets up data structures required to save a running list of testsheet source files.
 #' @export
 use_testsheets <- function() {
+
+  require(usethis)
+  if ('usethis' %in% installed.packages() == FALSE) install.packages('usethis')
+
   check_installed("testthat")
   check_installed("testsheets")
   check_installed("googledrive")
@@ -22,6 +26,7 @@ use_testsheets <- function() {
     use_dependency("testsheets", "Suggests")
     use_dependency("googledrive", "Suggests")
     use_dependency("googlesheets4", "Suggests")
+    use_dependency("usethis", "Suggests")
   }
 
   # location of Rdata file
@@ -35,12 +40,12 @@ use_testsheets <- function() {
   saveRDS(s, file = sheets_file, compress = FALSE)
 
   usethis::ui_todo(
-    "Call {ui_code('googledrive::drive_auth()')} to authorize googledrive to view and manage \\
+    "Call {usethis::ui_code('googledrive::drive_auth()')} to authorize googledrive to view and manage \\
     your Drive files. By default, your user credentials are cached so they can be automatically \\
     refreshed, as necessary."
   )
   usethis::ui_todo(
-    "Call {ui_code('googlesheets4::sheets_auth(token = drive_token())')} to direct googlesheets4 \\
+    "Call {usethis::ui_code('googlesheets4::sheets_auth(token = drive_token())')} to direct googlesheets4 \\
     to use the same token as googledrive."
   )
 }

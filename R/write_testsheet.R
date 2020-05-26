@@ -1,7 +1,5 @@
-
 #' Title
 #'
-#' @param spreadsheet
 #' @param sheet_name
 #' @param filename
 #' @param filepath
@@ -11,7 +9,13 @@
 #' @export
 #'
 #' @examples
-write_testsheet <- function(spreadsheet, sheet_name, filename=NULL, filepath=NULL, overwrite=FALSE) {
+write_testsheet <- function(sheet_name, filename=NULL, filepath=NULL, overwrite=FALSE) {
+
+  require(usethis)
+  if (is.null(filename)) filename <- paste0('test_', sheet_name, '.R')
+  if (is.null(filename)) filepath <- paste0(gsub('//demo', '', getwd()), '/tests/testthat')
+
+  spreadsheet <- googledrive::drive_get('Testing Database')
   validate_spreadsheet(spreadsheet)
   validate_sheet(sheet_name)
   connection <- open_file_connection(sheet_name, filename, filepath, overwrite)
@@ -23,7 +27,7 @@ open_file_connection <- function(sheet_name, filename=NULL, filepath=NULL, overw
 
   # default filename is the name of the sheet
   if (is.null(filename)) {
-    filename <- paste0("testsheet_", sheet_name, ".R")
+    filename <- paste0('test_', sheet_name, '.R')
   }
 
   # default path is cwd

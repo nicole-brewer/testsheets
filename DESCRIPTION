@@ -14,10 +14,13 @@ Imports:
     googledrive,
     glue,
     usethis,
-    tidyverse,
     magrittr,
     rlang,
-    rprojroot
+    rprojroot,
+    dplyr,
+    purrr,
+    readxl,
+    stringr
 Suggests:
     knitr,
     rmarkdown,

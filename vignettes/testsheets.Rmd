@@ -1,0 +1,92 @@
+---
+title: "testsheets"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{testsheets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# testsheets
+
+## Overview
+
+`testsheets` is a package for creating [testthat](https://testthat.r-lib.org/index.html) files from spreadsheets. It supports Google Sheets and Excel documents and relies heavily on the [tidyverse](https://www.tidyverse.org/) packages [googlesheets4](https://googlesheets4.tidyverse.org) and [readxl](https://readxl.tidyverse.org/index.html).
+
+## Installation
+
+This package is can be installed from [GitHub](https://github.com/) with:
+
+```{r, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("nicole-brewer/testsheets")
+```
+
+## Terminology
+
+Spreadsheet terminolgies among major tech giants are confusing and naming conflicts is worth extricating. In this package, we use three terms that conform to naming convensions in the **googlesheets4** package.
+- **sheet**:  a singular, two dimensional set of tabular data, also called a "sheet" in Google Sheets, and "spreadsheet" and "worksheet" in Excel
+- **ss**: a document that contains one or more sheets, called a "spreadsheet" in GoogleSheets, and "workbook" in Excel
+- **testsheet**: a **sheet** of any mimetype that follows formatting rules that allow for conversion a **testfile**
+- **testfile**: a script created from a **testsheet** that is compatable with the **testthat** package
+
+
+## Example
+
+Let's say we want to test a function we have written. In this example we will use a Google Sheets document called "example" that has two sheets named after the functions they were designed to test: "sum" and "mean".
+
+```{r}
+# Retrieve the google sheet
+library(googledrive)
+library(testsheets)
+
+# indicate there is no need for an access token since we are accessing
+# a read-only sheet via a public link
+googledrive::drive_deauth()
+
+# get 
+sum_ss <- googledrive::drive_get("https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing")
+
+# Load the "sum" sheet into a dribble
+#create_testsheet(sum_ss, sheet = "sum")
+```
+
+
+
+## Advanced Workflow: Leveraging testdata
+
+Internally, `create_testfile` obtains a tibble containing `testsheet` cell data. This tibble is cleaned in certain ways: for example, rows that have "false" in the include column will be removed and the 'param_' prefixes indicating input parameters will dropped.
+
+Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free **testfile**. `create_testsheet` is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call **testdata**.
+
+`testsheets` provides a workaround by providing two functions that separate testfile creation into two steps: `read_testsheet` and `write_testfile`. 
+
+```{r}
+
+
+# create testdata from temporary xlsx file
+#testdata <- read_testsheet(sum_ss, sheet = "sum")
+
+# modify the testdata tibble in some desired way
+change_testdata <- function(testdata) {
+  print('make modifications here!')
+  testdata <- testdata
+}
+#testdata <- testdata %>% change_testdata()
+
+# write the testdata to a testfile
+#write_testsheet(testdata)
+```
+* Side note: `readxl` doesn't currently support url's as file locations. See [issue 278](https://github.com/tidyverse/readxl/issues/278).
+
+
+
+
+

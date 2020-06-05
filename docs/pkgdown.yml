@@ -1,0 +1,8 @@
+pandoc: 2.8.1
+pkgdown: 1.5.0
+pkgdown_sha: ~
+articles:
+  integration_with_googlesheets4: integration_with_googlesheets4.html
+  testsheets: testsheets.html
+last_built: 2020-06-05T21:09Z
+

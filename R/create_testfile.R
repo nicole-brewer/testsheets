@@ -1,4 +1,3 @@
-
 #' Use a spreadsheet to create files for use with the testthat package.
 #'
 #' @param ss dribble or filepath.
@@ -8,11 +7,9 @@
 #' filenames must match the length of testdata.
 #' @param filepath character. The defallt is the current working directory
 #' @param overwrite boolean. The default is FALSE.
-#'
 #' @export
 #'
 #' @examples
-#'
 #' ss_path <- testsheets_example("excel")
 #' drop_param_y <- function(testdata) {
 #'   testdata <- testdata %>% dplyr::select(-dplyr::starts_with("param_y"))

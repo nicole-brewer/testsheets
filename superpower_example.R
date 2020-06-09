@@ -1,26 +1,26 @@
----
-  title: "Get started with testsheets"
----
+# install from git repository
+# devtools::install_github("nicole-brewer/testsheets")
 
 # connect to google drive
 drive_token <- googledrive::drive_auth()
-googlesheets4::sheets_auth(token=googledrive::drive_token())
+googlesheets4::gs4_auth(token=googledrive::drive_token())
 
 # file name in Google Drive
 file_name <- "Testing Database"
 
-mime_type <- googledrive::drive_mime_type("spreadsheet")
-
 # get and verify spreadsheet
-spreadsheet <- googledrive::drive_find(file_name, type=mime_type)
-sheet_name <- "powerTtest"
+spreadsheet <- googledrive::drive_get(file_name)
 
-s <-  sheets()
-print(s)
-save_sheets(s)
-add(sheet_name, spreadsheet)
+# get file path of this script
+filepath<-dirname(rstudioapi::getActiveDocumentContext()$path)
+setwd(filepath)
+setwd("../testthat")
+filepath <- getwd()
 
-#write_testsheet(spreadsheet, sheet_name)
-
-
+## CHANGE ME TO THE CORRECT SHEET NAME
+sheet_name_vec <- c("powerTtest", "powerRegression", "powerANOVAS", "powerANCOVA_multiway")
+for (sheet_name in sheet_name_vec) {
+  testsheets::create_testfile(spreadsheet, sheet_name,
+                              filename = paste0('test_', sheet_name, '.R'), filepath=filepath, overwrite = TRUE)
+}
 

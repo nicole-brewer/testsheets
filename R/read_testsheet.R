@@ -82,6 +82,8 @@ create_testdata <- function(data) {
     dplyr::mutate_if(is.character, ~ paste0("\"", ., "\"")) %>%
     dplyr::filter(.data$include == TRUE) %>%  # discard rows where "include" is FALSE, and then discard include column
     dplyr::select(-dplyr::matches("passing"))
+  data <- data.frame(lapply(data[, list_cols], function(y) gsub("NA", "NULL", y)))
+  data <- data.frame(lapply(data[, list_cols], function(y) gsub('"', '', y)))
 }
 
 confirm_sheet_exists <- function(sheet, names) {

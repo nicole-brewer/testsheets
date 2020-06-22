@@ -50,11 +50,11 @@ library(testsheets)
 # a read-only sheet via a public link
 googledrive::drive_deauth()
 
-# get 
-sum_ss <- googledrive::drive_get("https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing")
+# get dribble
+ss_path <- testsheets_example("excel")
 
 # Load the "sum" sheet into a dribble
-create_testfile(sum_ss, sheet = "sum")
+create_testfile(ss_path, sheet = "sum")
 ```
 
 ## Advanced Usage: Leveraging testdata

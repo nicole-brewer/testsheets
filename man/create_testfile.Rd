@@ -31,7 +31,6 @@ filenames must match the length of testdata.}
 Use a spreadsheet to create files for use with the testthat package.
 }
 \examples{
-
 ss_path <- testsheets_example("excel")
 drop_param_y <- function(testdata) {
   testdata <- testdata \%>\% dplyr::select(-dplyr::starts_with("param_y"))

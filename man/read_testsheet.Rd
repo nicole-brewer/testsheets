@@ -23,7 +23,6 @@ Reading a testsheet into a testdata tibble
 \examples{
 googledrive::drive_deauth()
 googlesheets4::gs4_deauth()
-url <- testsheets_example("google sheets")
-ss <- googledrive::drive_get(url)
+ss <- testsheets_example("google sheets")
 testdata <- read_testsheet(ss, "mean")
 }

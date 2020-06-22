@@ -57,6 +57,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/build_testsheet.html">Building a testsheet</a>
+    </li>
+    <li>
       <a href="../articles/integration_with_googlesheets4.html">integration_with_googledrive</a>
     </li>
   </ul>
@@ -105,9 +108,9 @@
 <a href="#terminology" class="anchor"></a>Terminology</h2>
 <p>Spreadsheet terminolgies among major tech giants are confusing and naming conflicts is worth extricating. In this package, we use three terms that conform to naming convensions in the <strong>googlesheets4</strong> package. - <strong>sheet</strong>: a singular, two dimensional set of tabular data, also called a “sheet” in Google Sheets, and “spreadsheet” and “worksheet” in Excel - <strong>ss</strong>: a document that contains one or more sheets, called a “spreadsheet” in GoogleSheets, and “workbook” in Excel - <strong>testsheet</strong>: a <strong>sheet</strong> of any mimetype that follows formatting rules that allow for conversion a <strong>testfile</strong> - <strong>testfile</strong>: a script created from a <strong>testsheet</strong> that is compatable with the <strong>testthat</strong> package</p>
 </div>
-<div id="example" class="section level2">
+<div id="basic-usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<a href="#basic-usage" class="anchor"></a>Basic Usage</h2>
 <p>Let’s say we want to test a function we have written. In this example we will use a Google Sheets document called “example” that has two sheets named after the functions they were designed to test: “sum” and “mean”.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Retrieve the google sheet</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googledrive</span>)
@@ -122,31 +125,60 @@
 <span class="no">sum_ss</span> <span class="kw">&lt;-</span> <span class="kw pkg">googledrive</span><span class="kw ns">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_get.html">drive_get</a></span>(<span class="st">"https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing"</span>)
 
 <span class="co"># Load the "sum" sheet into a dribble</span>
-<span class="co">#create_testsheet(sum_ss, sheet = "sum")</span></pre></body></html></div>
+<span class="fu"><a href="../reference/create_testfile.html">create_testfile</a></span>(<span class="no">sum_ss</span>, <span class="kw">sheet</span> <span class="kw">=</span> <span class="st">"sum"</span>)
+<span class="co">#&gt; Using an auto-discovered, cached token.</span>
+<span class="co">#&gt; To suppress this message, modify your code or options to clearly consent to the use of a cached token.</span>
+<span class="co">#&gt; See gargle's "Non-interactive auth" vignette for more details:</span>
+<span class="co">#&gt; https://gargle.r-lib.org/articles/non-interactive-auth.html</span>
+<span class="co">#&gt; The googlesheets4 package is using a cached token for brewer36@purdue.edu.</span>
+<span class="co">#&gt; Reading from "testsheets_example"</span>
+<span class="co">#&gt; Range "'sum'"</span></pre></body></html></div>
 </div>
-<div id="advanced-workflow-leveraging-testdata" class="section level2">
+<div id="advanced-usage-leveraging-testdata" class="section level2">
 <h2 class="hasAnchor">
-<a href="#advanced-workflow-leveraging-testdata" class="anchor"></a>Advanced Workflow: Leveraging testdata</h2>
+<a href="#advanced-usage-leveraging-testdata" class="anchor"></a>Advanced Usage: Leveraging testdata</h2>
 <p>Internally, <code>create_testfile</code> obtains a tibble containing <code>testsheet</code> cell data. This tibble is cleaned in certain ways: for example, rows that have “false” in the include column will be removed and the ‘param_’ prefixes indicating input parameters will dropped.</p>
-<p>Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free <strong>testfile</strong>. <code>create_testsheet</code> is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call <strong>testdata</strong>.</p>
+<p>Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free <strong>testfile</strong>. <code>create_testfile</code> is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call <strong>testdata</strong>.</p>
 <p><code>testsheets</code> provides a workaround by providing two functions that separate testfile creation into two steps: <code>read_testsheet</code> and <code>write_testfile</code>.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">testsheets</span>)
 
-<span class="co"># create testdata from temporary xlsx file</span>
-<span class="co">#testdata &lt;- read_testsheet(sum_ss, sheet = "sum")</span>
+<span class="co"># Obtain the path of an example testsheet</span>
+<span class="no">path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/testsheets_example.html">testsheets_example</a></span>(<span class="st">"excel"</span>)
+
+<span class="co"># create testdata from the sheet called "sum"</span>
+<span class="no">testdata</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read_testsheet.html">read_testsheet</a></span>(<span class="no">path</span>, <span class="kw">sheet</span> <span class="kw">=</span> <span class="st">"sum"</span>)
 
 <span class="co"># modify the testdata tibble in some desired way</span>
 <span class="no">change_testdata</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">testdata</span>) {
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">'make modifications here!'</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Testdata has been modified in some way!"</span>)
   <span class="no">testdata</span> <span class="kw">&lt;-</span> <span class="no">testdata</span>
 }
-<span class="co">#testdata &lt;- testdata %&gt;% change_testdata()</span>
+
+<span class="no">testdata</span> <span class="kw">&lt;-</span> <span class="no">testdata</span> <span class="kw">%&gt;%</span> <span class="fu">change_testdata</span>()
+<span class="co">#&gt; Testdata has been modified in some way!</span>
 
 <span class="co"># write the testdata to a testfile</span>
-<span class="co">#write_testsheet(testdata)</span></pre></body></html></div>
-<ul>
-<li>Side note: <code>readxl</code> doesn’t currently support url’s as file locations. See <a href="https://github.com/tidyverse/readxl/issues/278">issue 278</a>.</li>
-</ul>
+<span class="fu"><a href="../reference/write_testfile.html">write_testfile</a></span>(<span class="no">testdata</span>, <span class="st">"sum"</span>)
+<span class="co">#&gt; A file /Users/nicolebrewer/Repos/nicole-brewer-github/testsheets/vignettes/testsheet_sum.R already exists. Use the option `overwrite = TRUE` to overwrite it.</span></pre></body></html></div>
+<div id="cleaning-up-the-advanced-workflow" class="section level3">
+<h3 class="hasAnchor">
+<a href="#cleaning-up-the-advanced-workflow" class="anchor"></a>Cleaning up the advanced workflow</h3>
+<p>Now that we have written and understood whats going on behind the scenes in an advanced workflow, we have the option of cleaning it up by reverting back to the <code><a href="../reference/create_testfile.html">create_testfile()</a></code> function used in the basic workflow, but with one extra parameter. In R, functions are objects (of class type “function”) just like anything else, so we can pass our custom <code>change_testdata</code> function as a <code>manipulator</code> parameter.</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">testsheets</span>)
+
+<span class="co"># Obtain the path of an example testsheet</span>
+<span class="no">path</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/testsheets_example.html">testsheets_example</a></span>(<span class="st">"excel"</span>)
+
+<span class="co"># define our "manipulator" function</span>
+<span class="no">change_testdata</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">testdata</span>) {
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Testdata has been modified in some way!"</span>)
+  <span class="no">testdata</span> <span class="kw">&lt;-</span> <span class="no">testdata</span>
+}
+
+<span class="fu"><a href="../reference/create_testfile.html">create_testfile</a></span>(<span class="no">path</span>, <span class="st">"sum"</span>, <span class="kw">manipulator</span><span class="kw">=</span><span class="no">change_testdata</span>)
+<span class="co">#&gt; Testdata has been modified in some way!</span>
+<span class="co">#&gt; A file /Users/nicolebrewer/Repos/nicole-brewer-github/testsheets/vignettes/testsheet_sum.R already exists. Use the option `overwrite = TRUE` to overwrite it.</span></pre></body></html></div>
+</div>
 </div>
 </div>
   </div>

@@ -8,3 +8,5 @@ superpower_example.R
 # dotfiles created by use_testsheets
 tests/.spreadsheets.rds
 tests/.sheets.rds
+^doc$
+^Meta$

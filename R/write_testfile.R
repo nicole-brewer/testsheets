@@ -12,25 +12,10 @@
 #' @export
 #'
 #' @examples
-#' url <- testsheets_example("google sheets")
-#' ss <- googledrive::drive_get(url)
+#' ss <- testsheets_example("google sheets")
 #' testdata <- read_testsheet(ss, "sum")
 #' write_testfile(testdata, "sum", filename="mycustomfile.R")
 write_testfile <- function(testdata, func_name, filename=NULL, filepath=NULL, overwrite=FALSE) {
-
-  connection <- open_file_connection(func_name, filename, filepath, overwrite)
-
-  testdata <- testdata %>% select(-starts_with("user_"))  # discard user column
-
-  # sequence through every row (in tibble form)
-  for(i in seq(nrow(testdata))) {
-    row  <- testdata[i, ]
-    write_row(row, func_name, connection)
-  }
-  close(connection)
-}
-
-open_file_connection <- function(func_name, filename=NULL, filepath=NULL, overwrite=FALSE) {
 
   # default filename is the name of the test function
   if (is.null(filename)) {
@@ -42,13 +27,34 @@ open_file_connection <- function(func_name, filename=NULL, filepath=NULL, overwr
     filepath <- getwd()
   }
 
-  # open file connection
   fullpath <- file.path(filepath, filename)
 
-  # create file
-  created_file <- file.create(fullpath, overwrite=overwrite)
-  # open connection
-  connection <- file(fullpath, open = "w")
+  if(isFALSE(overwrite) & file.exists(fullpath)) {
+    message_glue("A file {fullpath} already exists. Use the option `overwrite = TRUE` to overwrite it.")
+  }
+
+  tryCatch(
+    {
+      # create file
+      #created_file <- file.create(fullpath)
+
+      # open connection
+      connection <- file(fullpath, open = "w")
+
+      if (!is.null(connection)) {
+        testdata <- testdata %>% select(-starts_with("user_"))  # discard user column
+
+        # sequence through every row (in tibble form)
+        for(i in seq(nrow(testdata))) {
+          row  <- testdata[i, ]
+          write_row(row, func_name, connection)
+        }
+      }
+    },
+    finally = {
+      close(connection)
+    }
+  )
 }
 
 write_row <- function(row, func_name, connection) {

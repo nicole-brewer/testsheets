@@ -1,0 +1,58 @@
+---
+title: "Building a testsheet"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Building a testsheet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(testsheets)
+```
+
+
+
+## Sheet Titles
+
+By default, each sheet title corresponds to the function you are testing. Otherwise it is possible to specify the `function_name` when writing testdata or creating a testscript.
+
+## Tabular Data Schema
+
+From Hadley's [R for Data Science](https://r4ds.had.co.nz/exploratory-data-analysis.html): **Tabular data** is a set of values, each associated with a variable and an observation. Tabular data is *tidy* if each value is placed in its own “cell”, each variable in its own column, and each observation in its own row.
+
+
+
+
+## Valid Column Types
+
+| Type                       | Column Name                                                  | Description                                                  |
+| -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Test that...**           | `test_that`                                                  | Ideally, each test case should have a description explaining what unique feature of the function it is testing. This description is used by test_that to remind the user of the tested functionality when a case fails. Designed to be literally read as "test that... [something works]". |
+| **Include**                | `include`                                                    | The include parameter specifies whether a certain row in the testsheet should be included in the resulting testdata. When left blank, the default value is TRUE. |
+| **Input Parameter**        | `param_<parameter_name>`                                     | An input parameter. The postfix must exactly match the name of the input variable and is case sensitive. |
+| **Expect Function**        | `<expect_function>` and `<expect_function>_<object_to_compare>` | This is where you specify an expection function. It's possible that an expectation function may compare an *actual* return object (always named "actual") to an *expected* one.  For example, if you want to test that `actual$attribute` is greater than the value specified in the column, the column name would be `expect_gte_actual$Power`. In the case where you want to comapare directly to the return object, `_actual` can be optionally omitted. For example,`expect_null` is equivalent to `expect_null_actual`. |
+| **User defined variables** | `user_<anything>`                                            | If you need any other columns for your own use, label them so. If you are using `read_testsheet()` to create intermediary testdata, you may use `keep_user_columns=TRUE` to postpone the exclusion of these columns until `write_testfile()` is called. |
+
+
+
+## Common Expection Functions
+
+Below are just a few of the expectation functions that are a part of the `testthat` package. Read [the documentation](https://testthat.r-lib.org/reference/index.html) for more information about the available functions.
+
+| Names                                                        | Expectation                                                  | Example Column Name                                          |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `testthat::expect_lt()`, `testthat::expect_lte()`, `testthat::expect_gt()`, `testthat::expect_gte()` | Is returned value less or greater than specified value?      | `expect_lte`, `expect_lt_actual`, `expect_gte_actual$attribute` |
+| `testthat::expect_equal()`                                   | Is the object equal to a value? In most cases you should use `expect_equal()` but there are [other functions]([here](https://testthat.r-lib.org/reference/equality-expectations.html)) that can test for equality. | `expect_equal`, `expect_equal_actual`, `expect_equal_actual$attribute` |
+| `testthat::expect_error()`                                   | Does code throw error?                                       | Enter the expected error message in the `expect_error` column. Blank entries won't be tested. |
+| `testthat::expect_message()`, `testthat::expect_warning()`   | Does code produce warnings or messages?                      | Enter the expected error message in the `expect_warning` column. Blank entries won't be tested. |
+| `testthat::expect_null()`                                    | Is the return object `NULL`?                                 | Enter `TRUE` in `expect_null` column. Blank entries won't be tested. |
+| `testthat::expect_true()`, `testthat::expect_false()`        | Is the object true/false?                                    | Enter `TRUE` in the `expect_true` column. Blank entries won't be tested. |
+

@@ -26,9 +26,8 @@ library(testsheets)
 googledrive::drive_deauth()
 
 # get document metadata from Google Drive
-example_sheet_url <- testsheets::testsheets_example("google sheets")
-sum_ss <- googledrive::drive_get(example_sheet_url)
+dribble <- testsheets::testsheets_example("google sheets")
 
-# Load the "sum" sheet into a dribble
-#sum_testsheet <- read_testsheet(sum_ss, sheet = "sum")
+# Load the "sum" sheet into a tibble
+sum_testsheet <- read_testsheet(dribble, sheet = "sum")
 ```

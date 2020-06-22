@@ -1,6 +1,8 @@
 test_that("google sheets example works", {
+  googledrive::drive_deauth()
   ss <- testsheets::testsheets_example("google sheets")
-  expect_equal(ss,"https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing")
+  expect_true(googledrive::is_dribble(ss))
+  expect_true(googledrive::single_file(ss))
 })
 
 test_that("excel example works", {
@@ -11,3 +13,5 @@ test_that("excel example works", {
 test_that("default example works", {
   expect_error()
 })
+
+

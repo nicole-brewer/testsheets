@@ -98,6 +98,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/build_testsheet.html">Building a testsheet</a>
+    </li>
+    <li>
       <a href="../articles/integration_with_googlesheets4.html">integration_with_googledrive</a>
     </li>
   </ul>
@@ -168,13 +171,12 @@ filenames must match the length of testdata.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>ss_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='testsheets_example.html'>testsheets_example</a></span>(<span class='st'>"excel"</span>)
+    <pre class="examples"><div class='input'><span class='no'>ss_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='testsheets_example.html'>testsheets_example</a></span>(<span class='st'>"excel"</span>)
 <span class='no'>drop_param_y</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>testdata</span>) {
   <span class='no'>testdata</span> <span class='kw'>&lt;-</span> <span class='no'>testdata</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(-<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>starts_with</a></span>(<span class='st'>"param_y"</span>))
 }
 <span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='st'>"testsheet_sum_x_only.R"</span>
-<span class='fu'>create_testfile</span>(<span class='no'>ss_path</span>, <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='st'>"sum"</span>, <span class='kw'>manipulator</span> <span class='kw'>=</span> <span class='no'>drop_param_y</span>, <span class='kw'>filename</span><span class='kw'>=</span><span class='no'>filename</span>)</div></pre>
+<span class='fu'>create_testfile</span>(<span class='no'>ss_path</span>, <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='st'>"sum"</span>, <span class='kw'>manipulator</span> <span class='kw'>=</span> <span class='no'>drop_param_y</span>, <span class='kw'>filename</span><span class='kw'>=</span><span class='no'>filename</span>)</div><div class='output co'>#&gt; <span class='message'>A file /Users/nicolebrewer/Repos/nicole-brewer-github/testsheets/docs/reference/testsheet_sum_x_only.R already exists. Use the option `overwrite = TRUE` to overwrite it.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

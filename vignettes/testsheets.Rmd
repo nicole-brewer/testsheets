@@ -37,8 +37,7 @@ Spreadsheet terminolgies among major tech giants are confusing and naming confli
 - **testsheet**: a **sheet** of any mimetype that follows formatting rules that allow for conversion a **testfile**
 - **testfile**: a script created from a **testsheet** that is compatable with the **testthat** package
 
-
-## Example
+## Basic Usage
 
 Let's say we want to test a function we have written. In this example we will use a Google Sheets document called "example" that has two sheets named after the functions they were designed to test: "sum" and "mean".
 
@@ -55,37 +54,55 @@ googledrive::drive_deauth()
 sum_ss <- googledrive::drive_get("https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing")
 
 # Load the "sum" sheet into a dribble
-#create_testsheet(sum_ss, sheet = "sum")
+create_testfile(sum_ss, sheet = "sum")
 ```
 
-
-
-## Advanced Workflow: Leveraging testdata
+## Advanced Usage: Leveraging testdata
 
 Internally, `create_testfile` obtains a tibble containing `testsheet` cell data. This tibble is cleaned in certain ways: for example, rows that have "false" in the include column will be removed and the 'param_' prefixes indicating input parameters will dropped.
 
-Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free **testfile**. `create_testsheet` is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call **testdata**.
+Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free **testfile**. `create_testfile` is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call **testdata**.
 
 `testsheets` provides a workaround by providing two functions that separate testfile creation into two steps: `read_testsheet` and `write_testfile`. 
 
 ```{r}
+library(testsheets)
 
+# Obtain the path of an example testsheet
+path <- testsheets_example("excel")
 
-# create testdata from temporary xlsx file
-#testdata <- read_testsheet(sum_ss, sheet = "sum")
+# create testdata from the sheet called "sum"
+testdata <- read_testsheet(path, sheet = "sum")
 
 # modify the testdata tibble in some desired way
 change_testdata <- function(testdata) {
-  print('make modifications here!')
+  message("Testdata has been modified in some way!")
   testdata <- testdata
 }
-#testdata <- testdata %>% change_testdata()
+
+testdata <- testdata %>% change_testdata()
 
 # write the testdata to a testfile
-#write_testsheet(testdata)
+write_testfile(testdata, "sum")
 ```
-* Side note: `readxl` doesn't currently support url's as file locations. See [issue 278](https://github.com/tidyverse/readxl/issues/278).
+### Cleaning up the advanced workflow
 
+Now that we have written and understood whats going on behind the scenes in an advanced workflow, we have the option of cleaning it up by reverting back to the `create_testfile()` function used in the basic workflow, but with one extra parameter. In R, functions are objects (of class type "function") just like anything else, so we can pass our custom `change_testdata` function as a `manipulator` parameter.
+
+```{r}
+library(testsheets)
+
+# Obtain the path of an example testsheet
+path <- testsheets_example("excel")
+
+# define our "manipulator" function
+change_testdata <- function(testdata) {
+  message("Testdata has been modified in some way!")
+  testdata <- testdata
+}
+
+create_testfile(path, "sum", manipulator=change_testdata)
+```
 
 
 

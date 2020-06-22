@@ -318,8 +318,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Terminology</h2>
 <p>Spreadsheet terminolgies among major tech giants are confusing and naming conflicts is worth extricating. In this package, we use three terms that conform to naming convensions in the <strong>googlesheets4</strong> package. - <strong>sheet</strong>: a singular, two dimensional set of tabular data, also called a “sheet” in Google Sheets, and “spreadsheet” and “worksheet” in Excel - <strong>ss</strong>: a document that contains one or more sheets, called a “spreadsheet” in GoogleSheets, and “workbook” in Excel - <strong>testsheet</strong>: a <strong>sheet</strong> of any mimetype that follows formatting rules that allow for conversion a <strong>testfile</strong> - <strong>testfile</strong>: a script created from a <strong>testsheet</strong> that is compatable with the <strong>testthat</strong> package</p>
 </div>
-<div id="example" class="section level2">
-<h2>Example</h2>
+<div id="basic-usage" class="section level2">
+<h2>Basic Usage</h2>
 <p>Let’s say we want to test a function we have written. In this example we will use a Google Sheets document called “example” that has two sheets named after the functions they were designed to test: “sum” and “mean”.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Retrieve the google sheet</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span>(googledrive)</span>
@@ -333,30 +333,53 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-10"><a href="#cb2-10"></a>sum_ss &lt;-<span class="st"> </span>googledrive<span class="op">::</span><span class="kw">drive_get</span>(<span class="st">&quot;https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing&quot;</span>)</span>
 <span id="cb2-11"><a href="#cb2-11"></a></span>
 <span id="cb2-12"><a href="#cb2-12"></a><span class="co"># Load the &quot;sum&quot; sheet into a dribble</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co">#create_testsheet(sum_ss, sheet = &quot;sum&quot;)</span></span></code></pre></div>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="kw">create_testfile</span>(sum_ss, <span class="dt">sheet =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">#&gt; Reading from &quot;testsheets_example&quot;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co">#&gt; Range &quot;&#39;sum&#39;&quot;</span></span></code></pre></div>
 </div>
-<div id="advanced-workflow-leveraging-testdata" class="section level2">
-<h2>Advanced Workflow: Leveraging testdata</h2>
+<div id="advanced-usage-leveraging-testdata" class="section level2">
+<h2>Advanced Usage: Leveraging testdata</h2>
 <p>Internally, <code>create_testfile</code> obtains a tibble containing <code>testsheet</code> cell data. This tibble is cleaned in certain ways: for example, rows that have “false” in the include column will be removed and the ‘param_’ prefixes indicating input parameters will dropped.</p>
-<p>Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free <strong>testfile</strong>. <code>create_testsheet</code> is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call <strong>testdata</strong>.</p>
+<p>Perhaps you have a lot of injected code in your spreadsheet that needs cleaning or repair to create an error_free <strong>testfile</strong>. <code>create_testfile</code> is not an ideal funciton in this scenario, because you skip over the intermediary tibble that we will call <strong>testdata</strong>.</p>
 <p><code>testsheets</code> provides a workaround by providing two functions that separate testfile creation into two steps: <code>read_testsheet</code> and <code>write_testfile</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(testsheets)</span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co"># create testdata from temporary xlsx file</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#testdata &lt;- read_testsheet(sum_ss, sheet = &quot;sum&quot;)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="co"># Obtain the path of an example testsheet</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>path &lt;-<span class="st"> </span><span class="kw">testsheets_example</span>(<span class="st">&quot;excel&quot;</span>)</span>
 <span id="cb3-5"><a href="#cb3-5"></a></span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># modify the testdata tibble in some desired way</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a>change_testdata &lt;-<span class="st"> </span><span class="cf">function</span>(testdata) {</span>
-<span id="cb3-8"><a href="#cb3-8"></a>  <span class="kw">print</span>(<span class="st">&#39;make modifications here!&#39;</span>)</span>
-<span id="cb3-9"><a href="#cb3-9"></a>  testdata &lt;-<span class="st"> </span>testdata</span>
-<span id="cb3-10"><a href="#cb3-10"></a>}</span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#testdata &lt;- testdata %&gt;% change_testdata()</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a></span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="co"># write the testdata to a testfile</span></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#write_testsheet(testdata)</span></span></code></pre></div>
-<ul>
-<li>Side note: <code>readxl</code> doesn’t currently support url’s as file locations. See <a href="https://github.com/tidyverse/readxl/issues/278">issue 278</a>.</li>
-</ul>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># create testdata from the sheet called &quot;sum&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>testdata &lt;-<span class="st"> </span><span class="kw">read_testsheet</span>(path, <span class="dt">sheet =</span> <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co"># modify the testdata tibble in some desired way</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>change_testdata &lt;-<span class="st"> </span><span class="cf">function</span>(testdata) {</span>
+<span id="cb3-11"><a href="#cb3-11"></a>  <span class="kw">message</span>(<span class="st">&quot;Testdata has been modified in some way!&quot;</span>)</span>
+<span id="cb3-12"><a href="#cb3-12"></a>  testdata &lt;-<span class="st"> </span>testdata</span>
+<span id="cb3-13"><a href="#cb3-13"></a>}</span>
+<span id="cb3-14"><a href="#cb3-14"></a></span>
+<span id="cb3-15"><a href="#cb3-15"></a>testdata &lt;-<span class="st"> </span>testdata <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">change_testdata</span>()</span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt; Testdata has been modified in some way!</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co"># write the testdata to a testfile</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="kw">write_testfile</span>(testdata, <span class="st">&quot;sum&quot;</span>)</span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="co">#&gt; A file /Users/nicolebrewer/Repos/nicole-brewer-github/testsheets/vignettes/testsheet_sum.R already exists. Use the option `overwrite = TRUE` to overwrite it.</span></span></code></pre></div>
+<div id="cleaning-up-the-advanced-workflow" class="section level3">
+<h3>Cleaning up the advanced workflow</h3>
+<p>Now that we have written and understood whats going on behind the scenes in an advanced workflow, we have the option of cleaning it up by reverting back to the <code>create_testfile()</code> function used in the basic workflow, but with one extra parameter. In R, functions are objects (of class type “function”) just like anything else, so we can pass our custom <code>change_testdata</code> function as a <code>manipulator</code> parameter.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(testsheets)</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># Obtain the path of an example testsheet</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>path &lt;-<span class="st"> </span><span class="kw">testsheets_example</span>(<span class="st">&quot;excel&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5"></a></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># define our &quot;manipulator&quot; function</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>change_testdata &lt;-<span class="st"> </span><span class="cf">function</span>(testdata) {</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="kw">message</span>(<span class="st">&quot;Testdata has been modified in some way!&quot;</span>)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  testdata &lt;-<span class="st"> </span>testdata</span>
+<span id="cb4-10"><a href="#cb4-10"></a>}</span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="kw">create_testfile</span>(path, <span class="st">&quot;sum&quot;</span>, <span class="dt">manipulator=</span>change_testdata)</span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; Testdata has been modified in some way!</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; A file /Users/nicolebrewer/Repos/nicole-brewer-github/testsheets/vignettes/testsheet_sum.R already exists. Use the option `overwrite = TRUE` to overwrite it.</span></span></code></pre></div>
+</div>
 </div>
 </div>
 

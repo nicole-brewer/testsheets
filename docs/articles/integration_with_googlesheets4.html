@@ -57,6 +57,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/build_testsheet.html">Building a testsheet</a>
+    </li>
+    <li>
       <a href="../articles/integration_with_googlesheets4.html">integration_with_googledrive</a>
     </li>
   </ul>
@@ -98,11 +101,17 @@
 <span class="kw pkg">googledrive</span><span class="kw ns">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_deauth.html">drive_deauth</a></span>()
 
 <span class="co"># get document metadata from Google Drive</span>
-<span class="no">example_sheet_url</span> <span class="kw">&lt;-</span> <span class="kw pkg">testsheets</span><span class="kw ns">::</span><span class="fu"><a href="../reference/testsheets_example.html">testsheets_example</a></span>(<span class="st">"google sheets"</span>)
-<span class="no">sum_ss</span> <span class="kw">&lt;-</span> <span class="kw pkg">googledrive</span><span class="kw ns">::</span><span class="fu"><a href="https://googledrive.tidyverse.org/reference/drive_get.html">drive_get</a></span>(<span class="no">example_sheet_url</span>)
+<span class="no">dribble</span> <span class="kw">&lt;-</span> <span class="kw pkg">testsheets</span><span class="kw ns">::</span><span class="fu"><a href="../reference/testsheets_example.html">testsheets_example</a></span>(<span class="st">"google sheets"</span>)
 
-<span class="co"># Load the "sum" sheet into a dribble</span>
-<span class="co">#sum_testsheet &lt;- read_testsheet(sum_ss, sheet = "sum")</span></pre></body></html></div>
+<span class="co"># Load the "sum" sheet into a tibble</span>
+<span class="no">sum_testsheet</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/read_testsheet.html">read_testsheet</a></span>(<span class="no">dribble</span>, <span class="kw">sheet</span> <span class="kw">=</span> <span class="st">"sum"</span>)
+<span class="co">#&gt; Using an auto-discovered, cached token.</span>
+<span class="co">#&gt; To suppress this message, modify your code or options to clearly consent to the use of a cached token.</span>
+<span class="co">#&gt; See gargle's "Non-interactive auth" vignette for more details:</span>
+<span class="co">#&gt; https://gargle.r-lib.org/articles/non-interactive-auth.html</span>
+<span class="co">#&gt; The googlesheets4 package is using a cached token for brewer36@purdue.edu.</span>
+<span class="co">#&gt; Reading from "testsheets_example"</span>
+<span class="co">#&gt; Range "'sum'"</span></pre></body></html></div>
 </div>
   </div>
 

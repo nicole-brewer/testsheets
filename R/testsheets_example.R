@@ -14,6 +14,8 @@ testsheets_example <- function(type=NULL) {
   } else if (type == "excel") {
     system.file("extdata", "testsheets_example.xlsx", package = "testsheets", mustWork = TRUE)
   } else if (type == "google sheets") {
-    "https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing"
+    googledrive::drive_deauth()
+    url <- "https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing"
+    googledrive::drive_get(url)
   }
 }

@@ -3,7 +3,6 @@
 export("%>%")
 export(create_testfile)
 export(read_testsheet)
-export(read_testsheets)
 export(testsheets_example)
 export(write_testfile)
 import(dplyr)

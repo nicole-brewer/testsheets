@@ -28,8 +28,7 @@ filenames must match the length of testdata.}
 Write testdata to a file formatted for use with the testthat package.
 }
 \examples{
-url <- testsheets_example("google sheets")
-ss <- googledrive::drive_get(url)
+ss <- testsheets_example("google sheets")
 testdata <- read_testsheet(ss, "sum")
 write_testfile(testdata, "sum", filename="mycustomfile.R")
 }

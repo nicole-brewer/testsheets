@@ -21,21 +21,39 @@ googledrive::drive_deauth()
 sum_ss <- googledrive::drive_get("https://docs.google.com/spreadsheets/d/1vR1aUlKMGtZIJOZaHNk7kePgeYYrkhoy0PFmZxs8wt4/edit?usp=sharing")
 
 # Load the "sum" sheet into a dribble
-#create_testsheet(sum_ss, sheet = "sum")
+create_testfile(sum_ss, sheet = "sum")
 
 ## -----------------------------------------------------------------------------
+library(testsheets)
 
+# Obtain the path of an example testsheet
+path <- testsheets_example("excel")
 
-# create testdata from temporary xlsx file
-#testdata <- read_testsheet(sum_ss, sheet = "sum")
+# create testdata from the sheet called "sum"
+testdata <- read_testsheet(path, sheet = "sum")
 
 # modify the testdata tibble in some desired way
 change_testdata <- function(testdata) {
-  print('make modifications here!')
+  message("Testdata has been modified in some way!")
   testdata <- testdata
 }
-#testdata <- testdata %>% change_testdata()
+
+testdata <- testdata %>% change_testdata()
 
 # write the testdata to a testfile
-#write_testsheet(testdata)
+write_testfile(testdata, "sum")
+
+## -----------------------------------------------------------------------------
+library(testsheets)
+
+# Obtain the path of an example testsheet
+path <- testsheets_example("excel")
+
+# define our "manipulator" function
+change_testdata <- function(testdata) {
+  message("Testdata has been modified in some way!")
+  testdata <- testdata
+}
+
+create_testfile(path, "sum", manipulator=change_testdata)
 

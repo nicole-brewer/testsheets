@@ -1,5 +1,7 @@
 # testsheets
 
+This repository is a consequence of my work with the [Social Cognition for Social Justice lab](https://henneslab.wixsite.com/scsj) in response to the need for undergraduates to contribute a high volume of test cases without touching any code.
+
 ## The Problem
 You are on a scientific research team developing software. Few or none of you are software developers by trade, and you have an overwhelmed grad
 student taking charge of technical aspects of project development. Your project may be statistical, not programatic, so your testing needs to be
